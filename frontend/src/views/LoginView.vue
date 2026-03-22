@@ -29,15 +29,24 @@
         </div>
 
         <div class="form-group">
-          <label>Mot de passe</label>
-          <input
-            v-model="form.password"
-            type="password"
-            class="form-control"
-            placeholder="••••••••"
-            required
-          />
-        </div>
+  <label>Mot de passe</label>
+  <div class="input-password">
+    <input
+      v-model="form.password"
+      :type="showPassword ? 'text' : 'password'"
+      class="form-control"
+      placeholder="••••••••"
+      required
+    />
+    <button
+      type="button"
+      class="toggle-password"
+      @click="showPassword = !showPassword"
+    >
+      {{ showPassword ? '🙈' : '👁️' }}
+    </button>
+  </div>
+</div>
 
         <button
           type="submit"
@@ -61,16 +70,15 @@ import { useAuthStore } from '../stores/auth';
 const router    = useRouter();
 const authStore = useAuthStore();
 
-// Données du formulaire
 const form = ref({
   email:    '',
   password: ''
 });
 
-const loading = ref(false);
-const error   = ref('');
+const loading      = ref(false);
+const error        = ref('');
+const showPassword = ref(false);  // ← contrôle affichage mot de passe
 
-// Soumission du formulaire
 const handleLogin = async () => {
   loading.value = true;
   error.value   = '';
@@ -78,10 +86,9 @@ const handleLogin = async () => {
   try {
     await authStore.login(form.value.email, form.value.password);
 
-    // Redirige selon le rôle
     if (authStore.isAdmin) {
       router.push('/dashboard');
-    } else {
+        } else {
       router.push('/my-dashboard');
     }
 
@@ -132,6 +139,36 @@ const handleLogin = async () => {
 .login-header p {
   color: var(--text-light);
   font-size: 14px;
+}
+
+/* Champ mot de passe avec bouton oeil */
+.input-password {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-password .form-control {
+  width: 100%;
+  padding-right: 48px; /* espace pour le bouton */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  line-height: 1;
+  z-index: 10;
+}
+
+.toggle-password:hover {
+  opacity: 0.7;
 }
 
 .btn-primary {

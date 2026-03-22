@@ -1,18 +1,17 @@
 const sequelize = require('../config/database');
 
-// Import de tous les models
-const User       = require('./User');
-const Employee   = require('./Employee');
-const Material   = require('./Material');
+const User        = require('./User');
+const Employee    = require('./Employee');
+const Material    = require('./Material');
 const MaterialLog = require('./MaterialLog');
-const Production = require('./Production');
-const Payment    = require('./Payment');
+const Production  = require('./Production');
+const Payment     = require('./Payment');
 
-// =============================================
-// ASSOCIATIONS (relations entre les tables)
-// =============================================
+// ================================================
+// ASSOCIATIONS
+// ================================================
 
-// Un employé possède un compte utilisateur
+// User ↔ Employee
 Employee.hasOne(User, {
   foreignKey: 'employee_id',
   as: 'user'
@@ -22,7 +21,7 @@ User.belongsTo(Employee, {
   as: 'employee'
 });
 
-// Un employé a plusieurs productions
+// Employee ↔ Production
 Employee.hasMany(Production, {
   foreignKey: 'employee_id',
   as: 'productions'
@@ -32,7 +31,7 @@ Production.belongsTo(Employee, {
   as: 'employee'
 });
 
-// Un employé a plusieurs paiements
+// Employee ↔ Payment
 Employee.hasMany(Payment, {
   foreignKey: 'employee_id',
   as: 'payments'
@@ -42,7 +41,7 @@ Payment.belongsTo(Employee, {
   as: 'employee'
 });
 
-// Un matériau a plusieurs logs
+// Material ↔ MaterialLog
 Material.hasMany(MaterialLog, {
   foreignKey: 'material_id',
   as: 'logs'
@@ -52,7 +51,9 @@ MaterialLog.belongsTo(Material, {
   as: 'material'
 });
 
-// Export de tout
+// ================================================
+// EXPORTS
+// ================================================
 module.exports = {
   sequelize,
   User,

@@ -251,6 +251,8 @@ exports.delete = async (req, res) => {
     });
 
   } catch (err) {
+     console.error('Erreur getAll employees :', err.message);
+     console.error(err);
     res.status(500).json({ success: false, message: 'Erreur serveur.' });
   }
 };
