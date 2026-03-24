@@ -52,18 +52,22 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 });
-
-router.beforeEach((to, from, next) => {
+router.beforeEach((to) => {
   const auth = useAuthStore();
 
-  if (to.meta.requiresAuth && !auth.isAuthenticated) return next('/login');
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    return '/login';
+  }
+
   if (to.meta.guest && auth.isAuthenticated) {
-    return next(auth.isAdmin ? '/dashboard' : '/my-dashboard');
+    return auth.isAdmin ? '/dashboard' : '/my-dashboard';
   }
+
   if (to.meta.role && auth.user?.role !== to.meta.role) {
-    return next(auth.isAdmin ? '/dashboard' : '/my-dashboard');
+    return auth.isAdmin ? '/dashboard' : '/my-dashboard';
   }
-  next();
+
+  return true;
 });
 
 export default router;

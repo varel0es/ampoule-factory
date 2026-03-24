@@ -46,11 +46,12 @@ api.interceptors.response.use(
 
     // Token expiré → redirige vers login
     if (status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
-    }
-
+       if (!window.location.pathname.includes('/login')) {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    window.location.href = '/login';
+  }
+}
     return Promise.reject({ message, status });
   }
 );
